@@ -8,8 +8,8 @@ namespace IO_refactoring
 {
     enum UserRoles
     {
-        VIP = 0,
+        Regular = 0,
         Admin = 1,
-        Regular = 2
+        VIP = 2
     }
 }

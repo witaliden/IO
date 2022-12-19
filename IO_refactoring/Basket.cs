@@ -4,6 +4,7 @@
     {
         public Product[] products = new Product[3];
         public float ProductsPrice { get; set; }
+        public int ProductsWeight => products.Sum(p => p.Weight);
         public float BaseProductsPrice => products.Sum(p => p.Price);
         public float ProductsPriceAfterDiscount { get; set; }
         public float ProductsPriceAfterRoleDiscount { get; set; }
@@ -11,13 +12,10 @@
         public float ProductsPriceWithExtraCosts { get; set; }
         public float ProductsPriceWithMargin { get; set; }
 
-        public int ProductsWeight { get; set; }
-
-        public float SumProductsPrice(int extraCosts = 0, int margin = 0, bool productPriceDependsOnWeight = true)
+        public float CalcBasketSum(int extraCosts = 0, int margin = 0, bool productPriceDependsOnWeight = true, UserRoles role = UserRoles.Regular)
         {
             ProductsPrice = products[0].Price < float.Epsilon ? float.Epsilon : BaseProductsPrice;
-            CountDiscount();
-            ProductsWeight = products.Sum(p => p.Weight);
+            CountDiscount(role);
             ProductsPrice = productPriceDependsOnWeight ? CountPriceByWeight() : ProductsPrice;
             ProductsPriceWithExtraCosts = ProductsPrice += extraCosts;
             ProductsPriceWithMargin = ProductsPrice += margin;
@@ -26,7 +24,7 @@
             return ProductsPrice;
         }
 
-        public void CountDiscount()
+        public void CountDiscount(UserRoles role)
         {
             switch (ProductsPrice)
             {
@@ -43,7 +41,7 @@
                     ProductsPriceAfterDiscount = (float)(0.9f * ProductsPrice);
                     break;
             }
-            ProductsPrice = ProductsPriceAfterRoleDiscount = ((Role == UserRoles.VIP) || (Role == UserRoles.Admin)) ? (int)(0.9f * ProductsPriceAfterDiscount) : ProductsPriceAfterDiscount;
+            ProductsPrice = ProductsPriceAfterRoleDiscount = ((role == UserRoles.VIP) || (role == UserRoles.Admin)) ? (int)(0.9f * ProductsPriceAfterDiscount) : ProductsPriceAfterDiscount;
         }
         public float CountPriceByWeight()
         {
