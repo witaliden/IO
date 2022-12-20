@@ -20,7 +20,7 @@
         }
 
         public void DisplayBasket(UserRoles role, int extraCosts = 0, int margin = 0, bool productPriceDependsOnWeight = true)
-        {
+            {
             CalcBasketSum(role, extraCosts, margin, productPriceDependsOnWeight);
             Console.WriteLine($"Cena produktów: {String.Format("{0:0.00}", BaseProductsPrice)}");
             Console.WriteLine($"Cena produktów po zniżce: {String.Format("{0:0.00}", ProductsPriceAfterDiscount)}");
@@ -58,6 +58,9 @@
                     break;
                 case > 100:
                     ProductsPriceAfterDiscount = (float)(0.9f * ProductsPrice);
+                    break;
+                default:
+                    ProductsPriceAfterDiscount = ProductsPrice; 
                     break;
             }
         }

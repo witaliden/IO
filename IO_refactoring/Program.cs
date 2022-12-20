@@ -8,11 +8,10 @@ Product[] products;
 initializeUsers();
 products = Product.generateSampleProducts();
 
-
-startShopping(regularUser, products[0], products[1], products[2]);
-startShopping(vipUser, products[0], products[1], products[2]);
-
+startShopping(regularUser, products[0], products[1]);
 finilizeShopping(regularUser);
+
+startShopping(vipUser, products[0], products[1], products[2]);
 finilizeShopping(vipUser);
 
 
