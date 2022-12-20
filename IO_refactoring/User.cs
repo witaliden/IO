@@ -2,11 +2,11 @@
 {
     class User
     {
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-        public string? Email { get; set; }
-        public UserRoles Role { get; set; }
-        public Basket? Basket { get; set; }
-        
+        internal string? FirstName { get; set; }
+        internal string? LastName { get; set; }
+        internal string? Email { get; set; }
+        internal UserRoles Role { get; set; } = UserRoles.Regular;
+        internal virtual Basket? Basket { get; set; }
+
     }
 }
