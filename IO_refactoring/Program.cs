@@ -3,67 +3,44 @@ using IO_refactoring;
 
 User regularUser;
 User vipUser;
-Basket regUserBacket = new();
-Basket vipUserBacket = new();
-Product product1;
-Product product2;
-Product product3;
+Product[] products;
 
-initUserData();
-initProducts();
+initializeUsers();
+products = Product.generateSampleProducts();
 
 
-addProductsToBasket(vipUserBacket, product1, product2, product3);
-vipUserBacket.DisplayBasket();
+startShopping(regularUser, products[0], products[1], products[2]);
+startShopping(vipUser, products[0], products[1], products[2]);
 
-addProductsToBasket(regUserBacket, product1, product2, product3);
-regUserBacket.DisplayBasket();
+finilizeShopping(regularUser);
+finilizeShopping(vipUser);
 
-void initUserData()
+
+void startShopping(User user, params Product[] list)
+{
+    if (list.Length > 0 && list.Length <= 3)
+    user.Basket.addProductsToBasket(list);
+    else Console.WriteLine("Można dodać od 1 do 3 przedmiotów");
+}
+void finilizeShopping(User user, int margin = 0, int extraCost = 0, bool productPriceDependsOnWeight = true)
+{
+    Console.WriteLine($"Koszyk użytkownika {user.FirstName} {user.LastName} ({user.Role}):");
+    regularUser.Basket.DisplayBasket(user.Role);
+}
+void initializeUsers()
 {
     regularUser = new()
     {
         FirstName = "Framek",
         LastName = "Kączak",
-        Basket = regUserBacket
+        Basket = new Basket()
     };
 
     vipUser = new()
     {
         FirstName = "Antonio",
         LastName = "Kowalski",
-        Basket = vipUserBacket,
+        Basket = new Basket(),
         Role = UserRoles.VIP
     };
-    regUserBacket.Owner = regularUser;
-    vipUserBacket.Owner = vipUser;
-}
-void initProducts()
-{
-    product1 = new()
-    {
-        Name = "Fasola",
-        Category = ProductCategory.Vegetable,
-        Price = 20.123f,
-        Weight = 10
-    };
-    product2 = new()
-    {
-        Name = "Banan",
-        Category = ProductCategory.Fruit,
-        Price = 20.99f,
-        Weight = 20
-    };
-    product3 = new()
-    {
-        Name = "Kiwi",
-        Category = ProductCategory.Fruit,
-        Price = 123,
-        Weight = 10
-    };
-}
-void addProductsToBasket(Basket basket, params Product[] list)
-{
-    if (list.Length > 0 && list.Length <= 3) basket.Products = list;
-    else Console.WriteLine("Można dodać od 1 do 3 przedmiotów");
 }

@@ -3,9 +3,10 @@
     internal class Basket
     {
         internal Product[]? Products { get; set; }
-        internal virtual User? Owner { get; set; }
-        private float ProductsPrice { get; set; }
+        internal int Margin = 0;
+        internal int ExtraCost = 0;
         private int ProductsWeight => Products.Sum(p => p.Weight);
+        private float ProductsPrice { get; set; }
         private float BaseProductsPrice => Products.Sum(p => p.Price);
         private float ProductsPriceAfterDiscount { get; set; }
         private float ProductsPriceAfterRoleDiscount { get; set; }
@@ -13,10 +14,14 @@
         private float ProductsPriceWithExtraCosts { get; set; }
         private float ProductsPriceWithMargin { get; set; }
 
-        public void DisplayBasket(int extraCosts = 0, int margin = 0, bool productPriceDependsOnWeight = true)
+        public void addProductsToBasket(params Product[] list)
         {
-            Console.WriteLine($"Koszyk użytkownika {Owner.FirstName} {Owner.LastName} ({Owner.Role})");
-            CalcBasketSum(extraCosts, margin, productPriceDependsOnWeight);
+            if (list.Length > 0 && list.Length <= 3) Products = list;
+        }
+
+        public void DisplayBasket(UserRoles role, int extraCosts = 0, int margin = 0, bool productPriceDependsOnWeight = true)
+        {
+            CalcBasketSum(role, extraCosts, margin, productPriceDependsOnWeight);
             Console.WriteLine($"Cena produktów: {String.Format("{0:0.00}", BaseProductsPrice)}");
             Console.WriteLine($"Cena produktów po zniżce: {String.Format("{0:0.00}", ProductsPriceAfterDiscount)}");
             Console.WriteLine($"Cena produktów dla grupy użytkownika: {String.Format("{0:0.00}", ProductsPriceAfterRoleDiscount)}");
@@ -27,12 +32,12 @@
             if (margin > 100) Console.WriteLine("Brawo, podwyżka się należy!");
         }
 
-        public void CalcBasketSum(int extraCosts = 0, int margin = 0, bool productPriceDependsOnWeight = true)
+        public void CalcBasketSum(UserRoles role, int extraCosts = 0, int margin = 0, bool productPriceDependsOnWeight = true)
         {
             ProductsPrice = Products[0].Price < float.Epsilon ? float.Epsilon : BaseProductsPrice;
             CountDiscount();
             ProductsPrice = ProductsPriceAfterRoleDiscount =
-                ((Owner.Role == UserRoles.VIP) || (Owner.Role == UserRoles.Admin)) ? (int)(0.9f * ProductsPriceAfterDiscount) : ProductsPriceAfterDiscount;
+                ((role == UserRoles.VIP) || (role == UserRoles.Admin)) ? (int)(0.9f * ProductsPriceAfterDiscount) : ProductsPriceAfterDiscount;
             ProductsPrice = productPriceDependsOnWeight ? CountPriceByWeight() : ProductsPrice;
             ProductsPriceWithExtraCosts = ProductsPrice += extraCosts;
             ProductsPriceWithMargin = ProductsPrice += margin;
